@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>What's Holding Your Kid Back? | Creating Confident Kids</title>
+  <meta name="description" content="Find out exactly where your child's confidence is strong — and where the gaps are." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: #F8F9FC; min-height: 100vh; }
+    #root { max-width: 480px; margin: 0 auto; background: #F8F9FC; min-height: 100vh; box-shadow: 0 0 40px rgba(0,0,0,0.08); }
+    button { font-family: 'Inter', system-ui, sans-serif; }
+    input  { font-family: 'Inter', system-ui, sans-serif; }
+    .grid-bg {
+      background-image: linear-gradient(#EEF0F5 1px, transparent 1px), linear-gradient(90deg, #EEF0F5 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .topbar {
+      background: #fff; padding: 13px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 3px solid #F5A623;
+      position: sticky; top: 0; z-index: 10;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+    }
+    .topbar-brand { display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: 13px; letter-spacing: 0.2px; }
+    .btn-primary {
+      width: 100%; background: #E8560A; color: #fff; border: none;
+      border-radius: 12px; padding: 16px 20px; font-size: 16px; font-weight: 800;
+      cursor: pointer; box-shadow: 0 4px 14px rgba(232,86,10,0.4);
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:disabled { background: #6B7280; box-shadow: none; cursor: not-allowed; }
+    .btn-restart {
+      background: transparent; border: 1px solid #E5E7EB; border-radius: 6px;
+      color: #6B7280; font-size: 12px; cursor: pointer; padding: 4px 10px;
+    }
+    .card {
+      background: #fff; border-radius: 14px; border: 1.5px solid #E5E7EB;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+    }
+    .opt-btn {
+      width: 100%; background: #fff; border: 2px solid #E5E7EB;
+      border-radius: 12px; padding: 14px 16px; cursor: pointer;
+      text-align: left; font-size: 14px; color: #0D2461;
+      line-height: 1.55; transition: all 0.15s; font-family: 'Inter', sans-serif;
+    }
+    .opt-btn:hover { border-color: #E8560A; background: #FFF3ED; }
+    .opt-btn.selected { background: #E8560A; border-color: #E8560A; color: #fff; font-weight: 700; }
+    .opt-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+      margin-right: 10px; background: #F8F9FC; color: #6B7280;
+      font-size: 11px; font-weight: 700;
+    }
+    .opt-btn.selected .opt-num { background: rgba(255,255,255,0.25); color: #fff; }
+    .age-btn {
+      width: 100%; background: #fff; border: 2px solid #E5E7EB;
+      border-radius: 14px; padding: 20px 18px; cursor: pointer; text-align: left;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.05); transition: all 0.15s; font-family: 'Inter', sans-serif;
+    }
+    .age-btn:hover { border-color: #E8560A; background: #FFF3ED; transform: translateY(-1px); }
+    .stripe { height: 7px; border-radius: 4px; transition: all 0.3s; }
+    .result-card { background: #fff; border-radius: 14px; padding: 18px 16px; margin-bottom: 12px; border: 1.5px solid #E5E7EB; box-shadow: 0 1px 8px rgba(0,0,0,0.04); }
+    .action-box { background: #FFF8EC; border-radius: 8px; padding: 11px 13px; border-left: 3px solid #F5A623; }
+    .email-input {
+      width: 100%; border: 2px solid #E5E7EB; border-radius: 10px;
+      padding: 14px 16px; font-size: 15px; color: #0D2461; outline: none;
+      margin-bottom: 16px; font-family: 'Inter', sans-serif; background: #fff;
+      transition: border-color 0.2s;
+    }
+    .email-input:focus { border-color: #E8560A; }
+    .email-input.error { border-color: #E8560A; margin-bottom: 8px; }
+    .hidden { display: none !important; }
+    .fade-in { animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+<div id="root">
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      <span>🥋</span>
+      <span><span style="color:#F5A623">Creating</span> <span style="color:#0D2461">Confident</span> <span style="color:#E8560A">Kids</span></span>
+    </div>
+    <button class="btn-restart hidden" id="restartBtn" onclick="restart()">Start over</button>
+  </div>
+
+  <!-- SCREEN: Intro -->
+  <div id="screen-intro" class="grid-bg fade-in" style="min-height:calc(100vh - 48px); display:flex; flex-direction:column;">
+    <div class="card" style="margin:24px 20px 0; padding:32px 24px 28px; text-align:center;">
+      <div style="font-size:52px; margin-bottom:14px;">🥋</div>
+      <p style="font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#F5A623; margin-bottom:8px;">The Confident Kid Scorecard</p>
+      <h1 style="font-family:Georgia,serif; font-size:26px; font-weight:700; color:#0D2461; line-height:1.25; margin-bottom:12px;">What's Holding<br>Your Kid Back?</h1>
+      <p style="font-size:15px; color:#6B7280; line-height:1.7; margin-bottom:24px; max-width:300px; margin-left:auto; margin-right:auto;">Find out exactly where your child's confidence is strong — and where the gaps are.</p>
+      <button class="btn-primary" onclick="goTo('age')">Start the scorecard →</button>
+      <p style="font-size:12px; color:#6B7280; margin-top:10px;">2 minutes · Free · Ages 4–12</p>
+    </div>
+    <div style="padding:20px 20px 0;">
+      <p style="font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#6B7280; margin-bottom:14px;">What you get</p>
+      <div class="card" style="display:flex; gap:14px; align-items:flex-start; padding:14px 16px; margin-bottom:12px;"><div style="font-size:24px; flex-shrink:0;">🎯</div><div><div style="font-size:14px; font-weight:700; color:#0D2461;">4 confidence pillars scored</div><div style="font-size:13px; color:#6B7280; margin-top:2px;">Based on real parent feedback</div></div></div>
+      <div class="card" style="display:flex; gap:14px; align-items:flex-start; padding:14px 16px; margin-bottom:12px;"><div style="font-size:24px; flex-shrink:0;">💡</div><div><div style="font-size:14px; font-weight:700; color:#0D2461;">One action per gap</div><div style="font-size:13px; color:#6B7280; margin-top:2px;">Something to do with your kid this week</div></div></div>
+      <div class="card" style="display:flex; gap:14px; align-items:flex-start; padding:14px 16px; margin-bottom:12px;"><div style="font-size:24px; flex-shrink:0;">🏆</div><div><div style="font-size:14px; font-weight:700; color:#0D2461;">Age-tailored questions</div><div style="font-size:13px; color:#6B7280; margin-top:2px;">Different for ages 4–7 and 8–12</div></div></div>
+    </div>
+    <div style="margin:16px 20px 32px; background:#FFF8EC; border-radius:12px; padding:14px 16px; border:1.5px solid #F5A623; display:flex; gap:12px; align-items:flex-start;">
+      <div style="font-size:28px; flex-shrink:0;">👊</div>
+      <p style="margin:0; font-size:13px; color:#0D2461; line-height:1.65;"><strong>10+ years</strong> coaching kids' martial arts and confidence — by a coach now using the same methods with his own son.</p>
+    </div>
+  </div>
+
+  <!-- SCREEN: Age -->
+  <div id="screen-age" class="grid-bg fade-in hidden" style="min-height:calc(100vh - 48px); padding:28px 20px;">
+    <div id="stripes-age" style="display:flex; gap:5px; justify-content:center; padding:12px 0 4px;"></div>
+    <p style="font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#F5A623; text-align:center; margin:14px 0 6px;">First up</p>
+    <h2 style="font-family:Georgia,serif; font-size:23px; font-weight:700; color:#0D2461; margin-bottom:6px; line-height:1.3; text-align:center;">How old is your child?</h2>
+    <p style="color:#6B7280; font-size:14px; margin-bottom:24px; text-align:center;">Questions are tailored to their age group</p>
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <button class="age-btn" onclick="selectAge('young')">
+        <div style="font-size:22px; font-weight:900; color:#0D2461;">Ages 4 – 7</div>
+        <div style="font-size:13px; color:#6B7280; margin-top:4px;">You'll answer based on what you observe</div>
+      </button>
+      <button class="age-btn" onclick="selectAge('older')">
+        <div style="font-size:22px; font-weight:900; color:#0D2461;">Ages 8 – 12</div>
+        <div style="font-size:13px; color:#6B7280; margin-top:4px;">Based on how your child describes themselves</div>
+      </button>
+    </div>
+  </div>
+
+  <!-- SCREEN: Question -->
+  <div id="screen-question" class="grid-bg fade-in hidden" style="min-height:calc(100vh - 48px); padding:20px 20px 32px;">
+    <div id="stripes-q" style="display:flex; gap:5px; justify-content:center; padding:12px 0 4px;"></div>
+    <p id="q-counter" style="font-size:12px; color:#6B7280; text-align:center; margin:8px 0 20px;"></p>
+    <div id="q-card" class="card" style="padding:22px 20px 24px; margin-bottom:18px; position:relative; overflow:hidden;">
+      <div id="q-strip" style="position:absolute; top:0; left:0; right:0; height:4px; border-radius:14px 14px 0 0;"></div>
+      <div id="q-pill" style="display:inline-flex; align-items:center; gap:6px; background:#F8F9FC; border-radius:20px; padding:5px 12px; margin-bottom:14px;"></div>
+      <h2 id="q-text" style="font-family:Georgia,serif; font-size:18px; color:#0D2461; line-height:1.5; margin:0;"></h2>
+    </div>
+    <div id="q-options" style="display:flex; flex-direction:column; gap:10px;"></div>
+  </div>
+
+  <!-- SCREEN: Email -->
+  <div id="screen-email" class="grid-bg fade-in hidden" style="min-height:calc(100vh - 48px); display:flex; flex-direction:column; justify-content:center; padding:32px 20px;">
+    <div class="card" style="padding:32px 24px; text-align:center; box-shadow:0 2px 20px rgba(13,36,97,0.07);">
+      <div style="font-size:44px; margin-bottom:14px;">📋</div>
+      <p style="font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#F5A623; margin-bottom:8px;">Almost there</p>
+      <h2 style="font-family:Georgia,serif; font-size:22px; font-weight:700; color:#0D2461; margin-bottom:10px; line-height:1.3;">Where should we send your results?</h2>
+      <p style="font-size:14px; color:#6B7280; line-height:1.7; margin-bottom:24px;">Enter your email and we'll show your child's full confidence scorecard — plus one action for each gap.</p>
+      <input type="email" id="emailInput" class="email-input" placeholder="your@email.com" onkeydown="if(event.key==='Enter') submitEmail()" />
+      <p id="emailError" class="hidden" style="font-size:13px; color:#E8560A; margin-bottom:14px; text-align:left;"></p>
+      <button class="btn-primary" id="emailBtn" onclick="submitEmail()">Show my results →</button>
+      <p style="font-size:12px; color:#6B7280; margin-top:12px; line-height:1.6;">No spam. Your results are shown instantly.<br>Unsubscribe any time.</p>
+    </div>
+  </div>
+
+  <!-- SCREEN: Results -->
+  <div id="screen-results" class="grid-bg fade-in hidden" style="min-height:calc(100vh - 48px); padding-bottom:48px;">
+    <div class="card" style="margin:20px 20px 0; padding:28px 22px 24px; text-align:center; box-shadow:0 2px 16px rgba(13,36,97,0.07);">
+      <p style="font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#F5A623; margin-bottom:6px;">Your scorecard</p>
+      <h2 id="results-headline" style="font-family:Georgia,serif; font-size:22px; font-weight:700; color:#0D2461; margin-bottom:18px; line-height:1.3;"></h2>
+      <div id="pillar-dots" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;"></div>
+    </div>
+    <div id="result-cards" style="padding:16px 20px 0;"></div>
+    <div style="margin:8px 20px 0; background:#fff; border-radius:16px; padding:26px 20px; border:2px solid #E8560A; box-shadow:0 4px 24px rgba(232,86,10,0.2); text-align:center; position:relative; overflow:hidden;">
+      <div style="position:absolute; top:0; left:0; right:0; height:5px; background:linear-gradient(90deg,#F5A623,#E8560A);"></div>
+      <div style="font-size:36px; margin-bottom:10px;">🎯</div>
+      <p style="font-size:11px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:#E8560A; margin-bottom:8px;">Ready to act on this?</p>
+      <h3 style="font-family:Georgia,serif; font-size:20px; font-weight:700; color:#0D2461; margin-bottom:10px; line-height:1.35;">Get the full activity kit — free</h3>
+      <p style="font-size:14px; color:#6B7280; margin-bottom:20px; line-height:1.7;">Inside the free <strong style="color:#0D2461;">Creating Confident Kids</strong> community there's a step-by-step activity for every area in this scorecard — including the Three Circles exercise, the controlled challenge framework, and age-specific drills you can do at home tonight.</p>
+      <a href="https://www.skool.com/creating-confident-kids-2798/about" target="_blank" style="display:block; background:#E8560A; color:#fff; border-radius:12px; padding:16px 20px; font-weight:900; font-size:16px; text-decoration:none; margin-bottom:10px; box-shadow:0 4px 14px rgba(232,86,10,0.4);">Join free → Get the activities</a>
+      <p style="font-size:12px; color:#6B7280; margin:0;">Free to join · No gym required · Ages 4–12</p>
+    </div>
+    <div style="text-align:center; margin-top:20px;">
+      <button onclick="restart()" style="background:transparent; border:none; color:#6B7280; font-size:13px; cursor:pointer; text-decoration:underline;">Start over with a different child</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Data ──────────────────────────────────────────────────────
+const TALLY_ID = "dWz7py";
+
+const PILLARS = [
+  { id:"selfbelief",  label:"Self-Belief",        icon:"🧠", color:"#F5A623" },
+  { id:"challenges",  label:"Facing Challenges",  icon:"🥊", color:"#E8560A" },
+  { id:"boundaries",  label:"Boundaries & Voice", icon:"🛡️", color:"#0D2461" },
+  { id:"social",      label:"Social Confidence",  icon:"🤝", color:"#16A34A" },
+];
+
+const QUESTIONS = {
+  young: [
+    { pillar:"selfbelief",  q:"When your child tries something new and struggles, they...", opts:["Give up and say they can't do it","Get frustrated but try again with encouragement","Keep going on their own — they back themselves"] },
+    { pillar:"challenges",  q:"When you set a task that's slightly too hard, your child...", opts:["Shuts down or gets upset","Gets annoyed but sticks with it","Treats it like a puzzle to figure out"] },
+    { pillar:"boundaries",  q:"If an adult asks your child for a hug they don't want, they...", opts:["Go along with it to keep the peace","Look to you to decide for them","Shake their head or say no — clearly"] },
+    { pillar:"social",      q:"At a new activity with unfamiliar kids, your child...", opts:["Stays close to you and won't join in","Watches for a while then slowly edges in","Jumps straight in — new kids don't faze them"] },
+    { pillar:"selfbelief",  q:"When your child sees another kid doing something better, they...", opts:["Say 'I'll never be that good'","Go quiet and seem deflated","Use it as fuel — they want to get there too"] },
+    { pillar:"challenges",  q:"After losing a game or coming last, your child...", opts:["Gets very upset and refuses to try again","Gets upset briefly then moves on","Shakes it off and wants another go"] },
+    { pillar:"boundaries",  q:"If something feels wrong at school or with a friend, your child...", opts:["Keeps it in — you find out much later","Eventually tells you if you ask directly","Comes straight to you and speaks up"] },
+    { pillar:"social",      q:"Making new friends at a park or party, your child...", opts:["Avoids other kids — sticks to who they know","Warms up slowly after watching for a while","Walks up and introduces themselves — no hesitation"] },
+  ],
+  older: [
+    { pillar:"selfbelief",  q:"When your child struggles at school, they say...", opts:["'I'm just not smart enough for this'","'I'll get it with more practice'","'I haven't found the right way to learn it yet'"] },
+    { pillar:"challenges",  q:"When something feels too hard, your child tends to...", opts:["Avoid it altogether","Push through but needs a lot of encouragement","Lean into it — hard things interest them"] },
+    { pillar:"boundaries",  q:"When a peer pressures your child into something they don't want, they...", opts:["Go along with it to avoid conflict","Sometimes stand firm, sometimes cave","Hold their ground — peer pressure doesn't move them"] },
+    { pillar:"social",      q:"Your child's friendship group looks like...", opts:["One or two friends, mostly the same type of kids","A decent group but mostly from one activity","A wide mix — different ages, backgrounds, interests"] },
+    { pillar:"selfbelief",  q:"After making a mistake in front of others, your child...", opts:["Gets embarrassed and won't try again","Gets over it but it takes time","Owns it, shakes it off, moves straight on"] },
+    { pillar:"challenges",  q:"Your child's relationship with physical challenge — sport, rough play — is...", opts:["They avoid it — not confident in their body","They'll do it if pushed but it's not natural","They seek it out — physical challenges are fun"] },
+    { pillar:"boundaries",  q:"If someone speaks down to your child or says something cruel, they...", opts:["Take it to heart — affects them for a long time","Get upset but shake it off eventually","Know it says more about the other person — don't take it on"] },
+    { pillar:"social",      q:"In group conversations or class discussions, your child...", opts:["Stays quiet — doesn't like speaking up","Joins in when they feel comfortable","Speaks up freely — others' opinions don't hold them back"] },
+  ],
+};
+
+const RESULTS = {
+  selfbelief: {
+    low:  { title:"Self-doubt is winning right now", body:"Your child is learning that struggle means something is wrong with them — not that it's just part of learning. The fix isn't more reassurance, it's changing what you celebrate.", action:"Next time they struggle, try: 'I can see how hard that is — and I can see you haven't given up.' Validate the difficulty. Celebrate the persistence." },
+    mid:  { title:"Self-belief is there — but fragile", body:"Confidence shows up in comfortable situations but cracks under pressure or when comparisons appear. The goal is making it hold under real conditions.", action:"Catch the next moment they compare themselves to another kid and redirect: 'Forget them — where were YOU three months ago?' Their own growth is the only comparison that matters." },
+    high: { title:"Self-belief is a real strength here", body:"Your child backs themselves. Protect it by keeping praise tied to effort, not talent — because talent-based confidence collapses on a bad day.", action:"Keep praise specific: 'Your consistency with this is really starting to show' lands stronger — and lasts longer — than 'you're so good at this.'" },
+  },
+  challenges: {
+    low:  { title:"Hard things feel like threats, not challenges", body:"Your child has learned that difficult means dangerous. This often happens when past challenges were too big too fast, or they were only praised for results — not for trying.", action:"Find one controlled challenge this week — just slightly outside their comfort zone. Celebrate the attempt out loud, whatever the result. The attempt IS the win." },
+    mid:  { title:"Getting there — but needs a push", body:"Your child can face challenges but needs external fuel to push through. The goal is building that drive from inside, not outside.", action:"Next time they hit frustration, hold back for 60 seconds before stepping in. That pause is where internal grit gets built." },
+    high: { title:"They lean into hard things — protect that", body:"This is rare and worth protecting. Keep challenges calibrated — not so easy they coast, not so hard they break. That middle zone is where confidence compounds.", action:"Find a new environment where they can be a beginner again. New sport, new skill — anything that puts them back at white belt." },
+  },
+  boundaries: {
+    low:  { title:"Their voice isn't being used yet", body:"Your child has learned that keeping others comfortable matters more than listening to themselves. This is where self-defence starts — long before anything physical.", action:"Try the Three Circles activity: draw three rings — family, close friends, everyone else. Ask your child who goes where. Let them decide. Don't correct them." },
+    mid:  { title:"They know the boundary — but won't say it", body:"Your child understands they have rights but hasn't built the muscle to use their voice when it counts. They need low-stakes practice before high-stakes moments.", action:"Role-play one scenario: 'What would you say if someone kept asking for a hug and you didn't want to?' Keep it playful. Rehearsal replaces the freeze response." },
+    high: { title:"Strong voice — a real protective factor", body:"Your child knows their limits and can speak up. This is one of the biggest protective factors against bullying, manipulation, and unsafe situations.", action:"Model your own boundaries out loud: 'I'm going to say no to that — it's not right for our family.' They learn this more from watching you than anything you tell them." },
+  },
+  social: {
+    low:  { title:"Social comfort zone is too narrow", body:"Your child gravitates strongly to the familiar and shrinks around new people. Bullies look for isolated kids — wide networks are a natural protection.", action:"Introduce one activity outside their usual world this month. Different sport, art class, community group — anything with kids they don't already know." },
+    mid:  { title:"Social — but only in safe territory", body:"Your child connects well with familiar people but shuts down around new ones. Broadening that circle builds adaptability that follows them everywhere.", action:"Encourage one conversation with a kid who's different from their usual group. Afterwards ask: 'What did you find out about them?' Curiosity builds connection." },
+    high: { title:"Social confidence is a real asset", body:"Your child can connect with a wide range of people. That's a major protective factor and a life skill most adults wish they'd built earlier.", action:"Encourage them to be the one who includes the kid on the edge of the group. That move builds leadership, empathy, and reputation all at once." },
+  },
+};
+
+// ── State ─────────────────────────────────────────────────────
+let state = { ageGroup: null, qIndex: 0, answers: [], scores: {} };
+
+// ── Scoring ───────────────────────────────────────────────────
+function scoreAnswers(answers) {
+  const totals = {}, counts = {};
+  answers.forEach(({ pillar, val }) => {
+    totals[pillar] = (totals[pillar] || 0) + val;
+    counts[pillar] = (counts[pillar] || 0) + 1;
+  });
+  const out = {};
+  Object.keys(totals).forEach(p => {
+    const avg = totals[p] / counts[p];
+    out[p] = avg < 0.9 ? "low" : avg < 1.7 ? "mid" : "high";
+  });
+  return out;
+}
+
+function levelColor(l) { return l === "high" ? "#16A34A" : l === "mid" ? "#F5A623" : "#E8560A"; }
+function levelBg(l)    { return l === "high" ? "#F0FDF4" : l === "mid" ? "#FFF8EC" : "#FFF3ED"; }
+function levelLabel(l) { return l === "high" ? "Strong ✓" : l === "mid" ? "Developing" : "Needs attention"; }
+
+// ── Navigation ────────────────────────────────────────────────
+function goTo(screen) {
+  document.querySelectorAll('[id^="screen-"]').forEach(el => el.classList.add('hidden'));
+  const el = document.getElementById('screen-' + screen);
+  el.classList.remove('hidden');
+  el.classList.remove('fade-in');
+  void el.offsetWidth;
+  el.classList.add('fade-in');
+  document.getElementById('restartBtn').classList.toggle('hidden', screen === 'intro');
+  window.scrollTo(0, 0);
+}
+
+function restart() {
+  state = { ageGroup: null, qIndex: 0, answers: [], scores: {} };
+  goTo('intro');
+}
+
+// ── Belt stripes ──────────────────────────────────────────────
+function renderStripes(containerId, current, total) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'stripe';
+    d.style.width  = i < current ? '26px' : '18px';
+    d.style.background = i < current ? '#E8560A' : '#E5E7EB';
+    d.style.opacity = i < current ? '1' : '0.4';
+    el.appendChild(d);
+  }
+}
+
+// ── Age select ────────────────────────────────────────────────
+function selectAge(ag) {
+  state.ageGroup = ag;
+  state.qIndex = 0;
+  state.answers = [];
+  renderStripes('stripes-age', 0, 8);
+  renderQuestion();
+  goTo('question');
+}
+
+// ── Question ──────────────────────────────────────────────────
+function renderQuestion() {
+  const qs = QUESTIONS[state.ageGroup];
+  const q  = qs[state.qIndex];
+  const p  = PILLARS.find(x => x.id === q.pillar);
+
+  renderStripes('stripes-q', state.qIndex + 1, qs.length);
+  document.getElementById('q-counter').textContent = `${state.qIndex + 1} of ${qs.length}`;
+  document.getElementById('q-strip').style.background = p.color;
+  document.getElementById('q-pill').innerHTML = `<span style="font-size:15px;">${p.icon}</span><span style="font-size:11px; color:${p.color}; font-weight:800; letter-spacing:1.2px; text-transform:uppercase;">${p.label}</span>`;
+  document.getElementById('q-text').textContent = q.q;
+
+  const optsEl = document.getElementById('q-options');
+  optsEl.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'opt-btn';
+    btn.innerHTML = `<span class="opt-num">${i + 1}</span>${opt}`;
+    btn.onclick = () => pickAnswer(i);
+    optsEl.appendChild(btn);
+  });
+}
+
+function pickAnswer(val) {
+  const btns = document.querySelectorAll('.opt-btn');
+  btns.forEach((b, i) => { if (i === val) b.classList.add('selected'); });
+
+  setTimeout(() => {
+    const q = QUESTIONS[state.ageGroup][state.qIndex];
+    state.answers.push({ pillar: q.pillar, val });
+    state.qIndex++;
+    if (state.qIndex < QUESTIONS[state.ageGroup].length) {
+      renderQuestion();
+    } else {
+      state.scores = scoreAnswers(state.answers);
+      goTo('email');
+    }
+  }, 240);
+}
+
+// ── Email ─────────────────────────────────────────────────────
+async function submitEmail() {
+  const input = document.getElementById('emailInput');
+  const errEl = document.getElementById('emailError');
+  const btn   = document.getElementById('emailBtn');
+  const email = input.value.trim().toLowerCase();
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    input.classList.add('error');
+    errEl.textContent = 'Please enter a valid email address';
+    errEl.classList.remove('hidden');
+    return;
+  }
+
+  input.classList.remove('error');
+  errEl.classList.add('hidden');
+  btn.disabled = true;
+  btn.textContent = 'Loading your results...';
+
+  try {
+    const params = new URLSearchParams({
+      email,
+      age_group:  state.ageGroup,
+      selfbelief: state.scores.selfbelief  || 'n/a',
+      challenges: state.scores.challenges  || 'n/a',
+      boundaries: state.scores.boundaries  || 'n/a',
+      social:     state.scores.social      || 'n/a',
+    });
+    await fetch(`https://tally.so/r/${TALLY_ID}`, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString(),
+    });
+  } catch(e) { /* silent fail — never block results */ }
+
+  renderResults();
+  goTo('results');
+}
+
+// ── Results ───────────────────────────────────────────────────
+function renderResults() {
+  const scores   = state.scores;
+  const pillars  = PILLARS.map(p => p.id);
+  const lowCount = pillars.filter(p => scores[p] === 'low').length;
+  const hiCount  = pillars.filter(p => scores[p] === 'high').length;
+  const headline = hiCount >= 3 ? 'Your child has a strong foundation' : lowCount >= 3 ? 'Now you know exactly where to focus' : 'A clear picture — strengths and gaps';
+
+  document.getElementById('results-headline').textContent = headline;
+
+  // Dots
+  const dotsEl = document.getElementById('pillar-dots');
+  dotsEl.innerHTML = '';
+  PILLARS.forEach(p => {
+    const level = scores[p.id] || 'mid';
+    dotsEl.innerHTML += `
+      <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+        <div style="width:50px; height:50px; border-radius:50%; background:#F8F9FC; border:3px solid ${levelColor(level)}; display:flex; align-items:center; justify-content:center; font-size:22px;">${p.icon}</div>
+        <span style="font-size:10px; color:#6B7280; font-weight:600; text-align:center; max-width:54px;">${p.label.split(' ')[0]}</span>
+      </div>`;
+  });
+
+  // Cards
+  const cardsEl = document.getElementById('result-cards');
+  cardsEl.innerHTML = '';
+  pillars.forEach(pid => {
+    const level = scores[pid] || 'mid';
+    const r = RESULTS[pid][level];
+    const p = PILLARS.find(x => x.id === pid);
+    cardsEl.innerHTML += `
+      <div class="result-card" style="border-left:5px solid ${levelColor(level)};">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; gap:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:20px;">${p.icon}</span>
+            <span style="font-weight:800; font-size:14px; color:#0D2461;">${p.label}</span>
+          </div>
+          <span style="font-size:11px; font-weight:700; color:${levelColor(level)}; background:${levelBg(level)}; padding:3px 9px; border-radius:20px; white-space:nowrap;">${levelLabel(level)}</span>
+        </div>
+        <p style="font-size:14px; font-weight:700; color:#0D2461; margin:0 0 5px;">${r.title}</p>
+        <p style="font-size:13px; color:#6B7280; margin:0 0 12px; line-height:1.7;">${r.body}</p>
+        <div class="action-box">
+          <p style="margin:0; font-size:13px; color:#0D2461; line-height:1.7;"><strong style="color:#E8560A;">💡 This week:</strong> ${r.action}</p>
+        </div>
+      </div>`;
+  });
+}
+
+// ── Init ──────────────────────────────────────────────────────
+goTo('intro');
+</script>
+</body>
+</html>
